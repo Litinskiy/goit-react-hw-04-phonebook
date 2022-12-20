@@ -12,12 +12,29 @@ export class App extends Component {
     filter:"",
   }
 
+  componentDidMount = () => {
+    const savedContacts = JSON.parse(localStorage.getItem("contacts"))
+    if (savedContacts) {
+      this.setState({
+        contacts: savedContacts,
+      })
+    }
+    console.log(savedContacts);
+  }
+
+  componentDidUpdate (_, prevState) {
+    if (prevState.contacts !== this.state.contacts) {
+      localStorage.setItem("contacts", JSON.stringify(this.state.contacts))
+    }
+  }
+
   addContact = (name, number) => {
     const newContact = {
       name,
       number,
       id: nanoid(),
     }
+
     const isInContacts = this.state.contacts.find(contact => contact.name === newContact.name)
     if (isInContacts) {
     alert('You already have this dude in your Phonebook!')
